@@ -3,21 +3,6 @@ const mongoose = require('mongoose')
 const User = mongoose.model('User')
 const log = require('debug')('slackbot:authHandler')
 
-// const convertProfile = user => {
-//   return {
-//     name: user.profile.real_name,
-//     role: user.role,
-//     userSlackId: user.userSlackId,
-//     botSlackId: user.botSlackId,
-//     teamSlackId: user.teamSlackId,
-//     email: user.email,
-//     token: user.token,
-//     scope: user.scope,
-//     avatar: user.avatar
-//     // metadata: user.metadata
-//   }
-// }
-
 function processAuthPayload (data) {
   if (!data.ok) {
     log('Auth Request failed:', data)
