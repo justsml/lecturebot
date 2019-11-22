@@ -1,0 +1,46 @@
+{
+  "name": "lecturebot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node --unhandled-rejections=warn botkit/app.js",
+    "dev": "nodemon --unhandled-rejections=warn botkit/app.js",
+    "db:seed": "node db/seeds/index.js",
+    "format": "standard './**/*.js' --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "standard './**/*.js' --fix"
+    }
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:LambdaSchool/lecturebot.git"
+  },
+  "keywords": [],
+  "author": "Dan Levy @justsml",
+  "license": "MIT",
+  "dependencies": {
+    "analytics-node": "^3.4.0-beta.1",
+    "botbuilder-adapter-slack": "^1.0.7",
+    "botkit": "^4.6.1",
+    "date-fns": "^2.8.0",
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.7.12"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "functional-promises": "^1.7.98",
+    "husky": "^3.1.0",
+    "nodemon": "^2.0.0",
+    "standard": "^14.3.1"
+  }
+}
