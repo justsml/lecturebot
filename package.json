@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node --unhandled-rejections=warn botkit/app.js",
-    "dev": "nodemon --unhandled-rejections=warn botkit/app.js",
+    "start": "node --unhandled-rejections=warn app.js",
+    "dev": "nodemon --unhandled-rejections=warn app.js",
     "db:seed": "node db/seeds/index.js",
     "format": "standard './**/*.js' --fix"
   },

@@ -1,7 +1,7 @@
 // const path = require('path')
 const { Botkit } = require('botkit')
 // const mongoStorage = require('botkit-storage-mongo')
-const config = require('../lib/shared/config.js')
+const config = require('./config.js')
 const { SlackAdapter, SlackMessageTypeMiddleware, SlackEventMiddleware } = require('botbuilder-adapter-slack')
 
 module.exports.createBot = function createBot ({ scopes = ['bot'] }) {
