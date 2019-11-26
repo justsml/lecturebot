@@ -23,10 +23,10 @@ function processAuthPayload (data) {
 }
 
 function addOrUpdateUser (data) {
-  return User.getByUserSlackId({ userSlackId: data.user.id }).then(user => {
+  return getByUserSlackId({ userSlackId: data.user.id }).then(user => {
     if (user) {
       console.log('\nABOUT TO UPDATE', user.name, '\nNew Scope:', data.scope, '\nOld Scope:', user.scope)
-      return User.patch({
+      return patch({
         _id: user._id,
         name: data.user.name,
         email: data.user.email,
@@ -37,7 +37,7 @@ function addOrUpdateUser (data) {
       })
     } else {
       console.log('\nCREATING USER FOR SLACKID:', data.user.id)
-      return User.create({
+      return create({
         name: data.user.name,
         email: data.user.email,
         token: data.access_token,
@@ -52,11 +52,11 @@ function addOrUpdateUser (data) {
 }
 
 function addOrUpdateBot (data) {
-  return User.getByUserSlackId({ userSlackId: data.bot.bot_user_id })
+  return getByUserSlackId({ userSlackId: data.bot.bot_user_id })
     .then(user => {
       if (user) {
         console.log('UPDATING BOT:', user.name)
-        return User.patch({
+        return patch({
           _id: user._id,
           name: data.user.name,
           email: data.user.email,
@@ -67,7 +67,7 @@ function addOrUpdateBot (data) {
         })
       } else {
         console.log('CREATING BOT FOR SLACKID:', data.bot.bot_user_id)
-        return User.create({
+        return create({
           name: data.team_name,
           role: 'Bot',
           token: data.access_token,
