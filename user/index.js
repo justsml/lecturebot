@@ -52,26 +52,28 @@ function addOrUpdateUser (data) {
 }
 
 function addOrUpdateBot (data) {
-  return getByUserSlackId({ userSlackId: data.bot.bot_user_id })
+  return getByUserSlackId({ botSlackId: data.bot.bot_user_id })
     .then(user => {
       if (user) {
         console.log('UPDATING BOT:', user.name)
         return patch({
           _id: user._id,
-          name: data.user.name,
-          email: data.user.email,
+          role: 'Bot',
+          name: data.team_name,
           token: data.access_token,
-          avatar: (data.user && data.user.image_512) || (data.user && data.user.image_original),
-          scope: data.scope,
+          userSlackId: data.user_id,
+          botSlackId: data.bot && data.bot.bot_user_id,
+          teamSlackId: data.team && data.team.id,
           metadata: data
         })
       } else {
         console.log('CREATING BOT FOR SLACKID:', data.bot.bot_user_id)
         return create({
-          name: data.team_name,
           role: 'Bot',
+          name: data.team_name,
           token: data.access_token,
-          userSlackId: data.bot.bot_user_id,
+          userSlackId: data.user_id,
+          botSlackId: data.bot && data.bot.bot_user_id,
           teamSlackId: data.team && data.team.id,
           metadata: data
         })
