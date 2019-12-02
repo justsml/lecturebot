@@ -17,12 +17,17 @@ const removeSubscriptions = ({ user, channel }) => {
 };
 
 const createSubscriptions = ({ user, channel }) => {
-  return Subscription.findOne({ user, channel }).then(subscription => {
-    if (subscription) return `Cannot create subscription. Already exists.`;
-    return Subscription.create({ user, channel }).then(
-      () => `Created subscription for ${channel}`
-    );
-  });
+  return Subscription.findOne({ user, channel })
+    .then(subscription => {
+      if (subscription) return `Cannot create subscription. Already exists.`;
+      return Subscription.create({ user, channel }).then(
+        () => `Created subscription for ${channel}`
+      );
+    })
+    .catch(error => {
+      console.error("ERROR: Failed to create subscription!");
+      return `Subscription may already exist. Use /lecturebot-check to confirm.`;
+    });
 };
 
 const create = (...args) => {

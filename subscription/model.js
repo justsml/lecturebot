@@ -5,20 +5,10 @@ const { Schema } = mongoose;
 
 const schema = new Schema(
   {
-    channel: { type: String },
+    channel: { type: String, unique: true },
     user: { type: String }
   },
   { timestamps: true }
-);
-
-schema.index(
-  {
-    channels: 1,
-    users: 1
-  },
-  {
-    unique: true
-  }
 );
 
 module.exports = mongoose.model("Subscription", schema);
