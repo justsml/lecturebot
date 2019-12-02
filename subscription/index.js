@@ -1,3 +1,4 @@
+const log = require("debug")("lecturebot:subscriptions");
 const mongoose = require("mongoose");
 const Subscription = mongoose.model("Subscription");
 
@@ -7,7 +8,8 @@ const getSubscriptions = () => {
   });
 };
 
-const removeSubscriptions = ({ user, channel }) => {
+const removeSubscription = ({ user, channel }) => {
+  log("Running removeSubscription:", { user, channel });
   return Subscription.findOne({ user, channel }).then(subscription => {
     if (subscription) return `Subscription does not exist! Nothing removed.`;
     return Subscription.deleteMany({ user, channel }).then(
@@ -16,9 +18,11 @@ const removeSubscriptions = ({ user, channel }) => {
   });
 };
 
-const createSubscriptions = ({ user, channel }) => {
-  return Subscription.findOne({ user, channel })
+const createSubscription = ({ user, channel }) => {
+  log("createSubscription: ", channel);
+  return Subscription.findOne({ channel })
     .then(subscription => {
+      log("createSubscription.findExisting ", channel);
       if (subscription) return `Cannot create subscription. Already exists.`;
       return Subscription.create({ user, channel }).then(
         () => `Created subscription for ${channel}`
@@ -44,8 +48,8 @@ const deleteOne = (...args) => {
 
 module.exports = {
   getSubscriptions,
-  removeSubscriptions,
-  createSubscriptions,
+  removeSubscription,
+  createSubscription,
   create,
   update,
   deleteOne

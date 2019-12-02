@@ -10,9 +10,10 @@ const slashCommands = {
   "/lecturebot-activate": ({ channel, user }) => {
     log("/lecturebot-activate called!", { channel, user });
     return subscription
-      .create({ channel }, { channel, user })
+      .createSubscription({ channel, user })
       .then(
-        () =>
+        message =>
+          message ||
           `> Lecturebot activated by ${user} in ${cache.allChannels[channel] ||
             "[private channel]"}`
       )
@@ -21,9 +22,10 @@ const slashCommands = {
   "/lecturebot-deactivate": ({ channel, user }) => {
     log("/lecturebot-deactivate called!", { channel, user });
     return subscription
-      .deleteOne({ channel, user })
+      .removeSubscription({ channel, user })
       .then(
-        () =>
+        message =>
+          message ||
           `> Lecturebot disabled by ${user} in ${cache.allChannels[channel] ||
             "[private channel]"}`
       )
@@ -56,8 +58,14 @@ module.exports = function init(controller) {
       log("Lecturebot ignoring unknown command: " + command);
       return;
     }
-    return slashCommands[command]({ channel, user }).then(
-      displayMessage => void bot.replyPublic(message, displayMessage)
-    );
+    return slashCommands[command]({ channel, user })
+      .then(displayMessage => void bot.replyPublic(message, displayMessage))
+      .catch(error => {
+        console.error("ERROR on slash command", error);
+        bot.replyPublic(
+          message,
+          `:yikes: There was an error. Check server logs!`
+        );
+      });
   });
 };
