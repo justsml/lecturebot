@@ -1,0 +1,50 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "google",
+    "prettier",
+    "eslint:recommended"
+  ],
+  "ignorePatterns": ["node_modules/"],
+  "parserOptions": {
+    "ecmaVersion": 2019,
+    "sourceType": "module",
+    "ecmaFeatures": {
+
+    }
+  },
+  "plugins": ["prettier", "import"],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "arrow-body-style": "off",
+    "camelcase": "warn",
+    "func-names": "off",
+    "global-require": "warn",
+    "import/no-dynamic-require": "warn",
+    "import/no-extraneous-dependencies": "off",
+    "no-console": "off",
+    "no-multi-assign": "off",
+    "no-param-reassign": "off",
+    "no-plusplus": "off",
+    "no-shadow": "warn",
+    "no-underscore-dangle": "off",
+    "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }],
+    "no-nested-ternary": "off",
+    "no-unused-vars": "warn",
+    "prefer-destructuring": "off",
+    "prettier/prettier": ["error"],
+    "semi": 0
+  },
+  "overrides": [
+    {
+      "files": ["*.spec.js", "*.test.js"],
+      "rules": {
+        "no-unused-expressions": "off"
+      }
+    }
+  ]
+}
