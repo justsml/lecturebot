@@ -1,5 +1,6 @@
 const subscription = require('../subscription')
 const cache = require('../cache.js')
+const log = require('debug')('lecturebot:commands')
 
 const updateSubscriptions = async () => {
   cache.setChannelSubscriptions(await subscription.getSubscriptions())
@@ -7,6 +8,7 @@ const updateSubscriptions = async () => {
 }
 const slashCommands = {
   '/lecturebot-activate': ({ channel, user }) => {
+    log('/lecturebot-activate called!', { channel, user })
     return subscription.create(
       { channel },
       { channel, user })
@@ -14,11 +16,13 @@ const slashCommands = {
       .then(updateSubscriptions)
   },
   '/lecturebot-deactivate': ({ channel, user }) => {
+    log('/lecturebot-deactivate called!', { channel, user })
     return subscription.deleteOne({ channel, user })
       .then(() => `> Lecturebot disabled by ${user} in ${cache.allChannels[channel] || '[private channel]'}`)
       .then(updateSubscriptions)
   },
   '/lecturebot-check': ({ channel }) => {
+    log('/lecturebot-check called!', { channel, user })
     return subscription.getSubscriptions()
       .then(channelSubscriptions => {
         return `> The current channel ${cache.allChannels[channel] || '[private channel]'} is ${channelSubscriptions.includes(channel) ? 'ENABLED' : 'NOT ENABLED'}`
@@ -33,7 +37,10 @@ module.exports = function init (controller) {
     const channel = message.channel
     const command = message.command.toLowerCase()
 
-    if (!slashCommands[command]) return
+    if (!slashCommands[command]) {
+      log('Lecturebot ignoring unknown command: ' + command)
+      return
+    }
     return slashCommands[command]({ channel, user })
       .then(displayMessage => void bot.replyPublic(message, displayMessage))
   })
