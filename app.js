@@ -92,7 +92,7 @@ const botHelpers = ({ adapter: { slack: client } }) => ({
       .list({
         limit: 1000,
         cursor,
-        types: "public_channel,private_channel,mpim"
+        types: "public_channel,private_channel"
       })
       .then(results => {
         // console.log('CHANNEL DATA INITIALIZED', JSON.stringify(results, null, 2))
