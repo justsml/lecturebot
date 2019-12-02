@@ -1,3 +1,4 @@
+const log = require('debug')('lecturebot:app')
 const { addOrUpdateBot, addOrUpdateUser } = require('./user/index.js')
 const subscription = require('./subscription/index.js')
 const { createBot } = require('./create.js')
@@ -22,8 +23,12 @@ const commands = require('./commands/index.js')
 
 controller.ready(async () => {
   console.log(`\nBotkit App is Running!\n`)
-  botHelpers(bot).getChannels({}).then(console.log).catch(console.error)
-  cache.setChannelSubscriptions(await subscription.getSubscriptions())
+  botHelpers(bot).getChannels({})
+    .then(channels => log('Loaded Channels:', channels))
+    .catch(console.error)
+  const subscriptions = await subscription.getSubscriptions()
+  cache.setChannelSubscriptions(subscriptions)
+  log('Found Subscriptions:', subscriptions)
 
   skills(controller)
   commands(controller)
@@ -40,6 +45,7 @@ server.get('/install', (req, res) => {
 })
 
 server.get('/install/auth', async (req, res) => {
+  log('Auth Requested')
   try {
     const results = await controller.adapter.validateOauthCode(
       req.query.code

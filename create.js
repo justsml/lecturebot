@@ -1,3 +1,4 @@
+const log = require('debug')('lecturebot:create:botkit')
 // const path = require('path')
 const { Botkit } = require('botkit')
 // const mongoStorage = require('botkit-storage-mongo')
@@ -17,8 +18,10 @@ module.exports.createBot = function createBot ({ scopes = ['bot'] }) {
     clientSigningSecret: config.slack.signingSecret,
     redirectUri: config.slack.redirectUri,
     logger: {
-      log: (level, ...args) =>
+      log: (level, ...args) => {
         args.every((arg) => typeof arg === 'string') ? console[level](args.join(' ')) : console[level](...args)
+        if (level === 'error' || level === 'warn') log(...args)
+      }
     },
     scopes
   })
@@ -28,6 +31,6 @@ module.exports.createBot = function createBot ({ scopes = ['bot'] }) {
     webhook_uri: '/api/messages',
     adapter
   })
-
+  log('Created Botkit Client w/ Slack Adapter')
   return { controller, adapter }
 }
