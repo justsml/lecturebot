@@ -1,6 +1,6 @@
-require('../db/index.js')
-const mongoose = require('mongoose')
-const { Schema } = mongoose
+require("../db/index.js");
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 // const { Types } = Schema;
 
 const schema = new Schema(
@@ -9,13 +9,16 @@ const schema = new Schema(
     user: { type: String }
   },
   { timestamps: true }
-)
+);
 
-schema.index({
-  channels: 1,
-  users: 1
-}, {
-  unique: true
-})
+schema.index(
+  {
+    channels: 1,
+    users: 1
+  },
+  {
+    unique: true
+  }
+);
 
-module.exports = mongoose.model('Subscription', schema)
+module.exports = mongoose.model("Subscription", schema);

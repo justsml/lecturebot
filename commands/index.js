@@ -1,6 +1,6 @@
-const lecturebot = require('./lecturebot.js')
+const lecturebot = require("./lecturebot.js");
 
-module.exports = function init (controller) {
-  lecturebot(controller)
-  return controller
-}
+module.exports = function init(controller) {
+  lecturebot(controller);
+  return controller;
+};

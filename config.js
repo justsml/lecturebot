@@ -1,12 +1,20 @@
-require('dotenv').config()
+require("dotenv").config();
 
-if (!process.env.SLACK_REDIRECT_URI) throw new Error('Required ENV: SLACK_REDIRECT_URI')
-if (!process.env.SLACK_CLIENT_ID) throw new Error('Required ENV: SLACK_CLIENT_ID')
-if (!process.env.SLACK_CLIENT_SECRET) throw new Error('Required ENV: SLACK_CLIENT_SECRET')
-if (!process.env.SLACK_SIGNING_SECRET) throw new Error('Required ENV: SLACK_SIGNING_SECRET')
-if (!process.env.SLACK_BOT_OAUTH_ACCESS_TOKEN) throw new Error('Required ENV: SLACK_BOT_OAUTH_ACCESS_TOKEN')
+if (!process.env.SLACK_REDIRECT_URI)
+  throw new Error("Required ENV: SLACK_REDIRECT_URI");
+if (!process.env.SLACK_CLIENT_ID)
+  throw new Error("Required ENV: SLACK_CLIENT_ID");
+if (!process.env.SLACK_CLIENT_SECRET)
+  throw new Error("Required ENV: SLACK_CLIENT_SECRET");
+if (!process.env.SLACK_SIGNING_SECRET)
+  throw new Error("Required ENV: SLACK_SIGNING_SECRET");
+if (!process.env.SLACK_BOT_OAUTH_ACCESS_TOKEN)
+  throw new Error("Required ENV: SLACK_BOT_OAUTH_ACCESS_TOKEN");
 
-process.env.SLACK_REDIRECT_URI = process.env.SLACK_REDIRECT_URI.replace(/\/$/, '')
+process.env.SLACK_REDIRECT_URI = process.env.SLACK_REDIRECT_URI.replace(
+  /\/$/,
+  ""
+);
 
 module.exports = {
   baseUrl: process.env.BASE_URI,
@@ -21,4 +29,4 @@ module.exports = {
     verificationToken: process.env.SLACK_VERIFICATION_TOKEN,
     redirectUri: process.env.SLACK_REDIRECT_URI
   }
-}
+};

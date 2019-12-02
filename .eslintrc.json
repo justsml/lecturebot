@@ -30,14 +30,15 @@
     "no-multi-assign": "off",
     "no-param-reassign": "off",
     "no-plusplus": "off",
-    "no-shadow": "warn",
+    "no-shadow": "off",
     "no-underscore-dangle": "off",
     "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }],
     "no-nested-ternary": "off",
     "no-unused-vars": "warn",
     "prefer-destructuring": "off",
     "prettier/prettier": ["error"],
-    "semi": 0
+    "semi": "off",
+    "require-jsdoc": "off"
   },
   "overrides": [
     {

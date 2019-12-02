@@ -1,11 +1,15 @@
-const log = require('debug')('lecturebot:create:botkit')
+const log = require("debug")("lecturebot:create:botkit");
 // const path = require('path')
-const { Botkit } = require('botkit')
+const { Botkit } = require("botkit");
 // const mongoStorage = require('botkit-storage-mongo')
-const config = require('./config.js')
-const { SlackAdapter, SlackMessageTypeMiddleware, SlackEventMiddleware } = require('botbuilder-adapter-slack')
+const config = require("./config.js");
+const {
+  SlackAdapter,
+  SlackMessageTypeMiddleware,
+  SlackEventMiddleware
+} = require("botbuilder-adapter-slack");
 
-module.exports.createBot = function createBot ({ scopes = ['bot'] }) {
+module.exports.createBot = function createBot({ scopes = ["bot"] }) {
   // if (process.env.MONGODB_URI) {
   //   botOptions.storage = mongoStorage({ mongoUri: process.env.MONGODB_URI })
   // } else {
@@ -19,18 +23,20 @@ module.exports.createBot = function createBot ({ scopes = ['bot'] }) {
     redirectUri: config.slack.redirectUri,
     logger: {
       log: (level, ...args) => {
-        args.every((arg) => typeof arg === 'string') ? console[level](args.join(' ')) : console[level](...args)
-        if (level === 'error' || level === 'warn') log(...args)
+        args.every(arg => typeof arg === "string")
+          ? console[level](args.join(" "))
+          : console[level](...args);
+        if (level === "error" || level === "warn") log(...args);
       }
     },
     scopes
-  })
-  adapter.use(new SlackEventMiddleware())
-  adapter.use(new SlackMessageTypeMiddleware())
+  });
+  adapter.use(new SlackEventMiddleware());
+  adapter.use(new SlackMessageTypeMiddleware());
   const controller = new Botkit({
-    webhook_uri: '/api/messages',
+    webhook_uri: "/api/messages",
     adapter
-  })
-  log('Created Botkit Client w/ Slack Adapter')
-  return { controller, adapter }
-}
+  });
+  log("Created Botkit Client w/ Slack Adapter");
+  return { controller, adapter };
+};

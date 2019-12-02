@@ -1,14 +1,14 @@
-require('../db/index.js')
-const mongoose = require('mongoose')
-const { Schema } = mongoose
-const roles = ['Instructor', 'Student', 'Admin', 'TA', 'Bot', 'All']
+require("../db/index.js");
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
+const roles = ["Instructor", "Student", "Admin", "TA", "Bot", "All"];
 
 const schema = new Schema(
   {
     name: { type: String },
     displayName: { type: String },
     realName: { type: String },
-    role: { type: String, enum: roles, default: 'Student' },
+    role: { type: String, enum: roles, default: "Student" },
     userSlackId: { type: String, unique: true },
     botSlackId: { type: String },
     teamSlackId: { type: String },
@@ -19,6 +19,6 @@ const schema = new Schema(
     metadata: { type: Object }
   },
   { timestamps: true }
-)
+);
 
-module.exports = mongoose.model('User', schema)
+module.exports = mongoose.model("User", schema);
