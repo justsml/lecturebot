@@ -26,4 +26,16 @@ const createSubscriptions = ({ user, channel }) => {
     })
 }
 
-module.exports = { getSubscriptions, removeSubscriptions, createSubscriptions }
+const create = (...args) => {
+  return Subscription.create(...args)
+}
+
+const update = (...args) => {
+  return Subscription.update(...args)
+}
+
+const deleteOne = (...args) => {
+  return Subscription.deleteOne(...args)
+}
+
+module.exports = { getSubscriptions, removeSubscriptions, createSubscriptions, create, update, deleteOne }
