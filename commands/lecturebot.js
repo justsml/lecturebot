@@ -34,6 +34,7 @@ const slashCommands = {
   "/lecturebot-check": ({ channel }) => {
     log("/lecturebot-check called!", { channel });
     return subscription.getSubscriptions().then(channelSubscriptions => {
+      log(`Is ${channel} in list: ${channelSubscriptions.join(", ")}...`);
       return `> The current channel ${cache.allChannels[channel] ||
         "[private channel]"} is ${
         channelSubscriptions.includes(channel) ? "ENABLED" : "NOT ENABLED"
