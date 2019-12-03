@@ -11,25 +11,25 @@ const slashCommands = {
     log("/lecturebot-activate called!", { channel, user });
     return subscription
       .createSubscription({ channel, user })
+      .then(updateSubscriptions)
       .then(
         message =>
           message ||
           `> Lecturebot activated by ${user} in ${cache.allChannels[channel] ||
             "[private channel]"}`
-      )
-      .then(updateSubscriptions);
+      );
   },
   "/lecturebot-deactivate": ({ channel, user }) => {
     log("/lecturebot-deactivate called!", { channel, user });
     return subscription
       .removeSubscription({ channel, user })
+      .then(updateSubscriptions)
       .then(
         message =>
           message ||
           `> Lecturebot disabled by ${user} in ${cache.allChannels[channel] ||
             "[private channel]"}`
-      )
-      .then(updateSubscriptions);
+      );
   },
   "/lecturebot-check": ({ channel }) => {
     log("/lecturebot-check called!", { channel });
