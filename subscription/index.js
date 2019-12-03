@@ -29,7 +29,7 @@ const createSubscription = ({ user, channel }) => {
       );
     })
     .catch(error => {
-      console.error("ERROR: Failed to create subscription!");
+      console.error("ERROR: Failed to create subscription!", error);
       return `Subscription may already exist. Use /lecturebot-check to confirm.`;
     });
 };
