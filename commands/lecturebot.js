@@ -62,14 +62,15 @@ module.exports = function init(controller) {
     log(`Command ${command} by ${user} has payload: `, JSON.stringify(message));
 
     return slashCommands[command]({ channel, user })
-      .then(displayMessage => void bot.replyPublic(message, displayMessage))
+      .then(displayMessage =>
+        bot.replyPublic(message, `Response: ${displayMessage}`)
+      )
       .catch(error => {
         console.error("ERROR on slash command", error, message);
-        bot.replyPublic(message, {
-          type: ":yikes: There was an error. Check server logs!",
-          text: message,
-          channelData: {}
-        });
+        return bot.replyPublic(
+          message,
+          ":yikes: There was an error. Check server logs!"
+        );
       });
   });
 };
