@@ -61,7 +61,7 @@ module.exports = function init(controller) {
     return slashCommands[command]({ channel, user })
       .then(displayMessage => void bot.replyPublic(message, displayMessage))
       .catch(error => {
-        console.error("ERROR on slash command", error);
+        console.error("ERROR on slash command", error, message);
         bot.replyPublic(
           message,
           `:yikes: There was an error. Check server logs!`
