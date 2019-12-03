@@ -66,8 +66,8 @@ module.exports = function init(controller) {
       .catch(error => {
         console.error("ERROR on slash command", error, message);
         bot.replyPublic(
-          `:yikes: There was an error. Check server logs!`,
-          message
+          message,
+          `:yikes: There was an error. Check server logs!`
         );
       });
   });
