@@ -65,10 +65,11 @@ module.exports = function init(controller) {
       .then(displayMessage => void bot.replyPublic(message, displayMessage))
       .catch(error => {
         console.error("ERROR on slash command", error, message);
-        bot.replyPublic(
-          message,
-          `:yikes: There was an error. Check server logs!`
-        );
+        bot.replyPublic(message, {
+          type: ":yikes: There was an error. Check server logs!",
+          text: message,
+          channelData: {}
+        });
       });
   });
 };
