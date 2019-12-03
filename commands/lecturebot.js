@@ -58,6 +58,9 @@ module.exports = function init(controller) {
       log("Lecturebot ignoring unknown command: " + command);
       return;
     }
+
+    log(`Command ${command} by ${user} has payload: `, JSON.stringify(message));
+
     return slashCommands[command]({ channel, user })
       .then(displayMessage => void bot.replyPublic(message, displayMessage))
       .catch(error => {
