@@ -6,6 +6,7 @@ const updateSubscriptions = async () => {
   cache.setChannelSubscriptions(await subscription.getSubscriptions());
   console.log("UPDATED cache.channelSubscriptions", cache.channelSubscriptions);
 };
+
 const slashCommands = {
   "/lecturebot-activate": ({ channel, user }) => {
     log("/lecturebot-activate called!", { channel, user });
@@ -73,3 +74,5 @@ module.exports = function init(controller) {
       });
   });
 };
+
+module.exports.slashCommands = slashCommands;

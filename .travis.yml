@@ -1,0 +1,20 @@
+sudo: required
+
+language: node_js
+
+node_js:
+  - 12
+
+services:
+  - docker
+
+before_script:
+  - docker run -d -p 27017:27017 mongo:4.0
+  - docker ps -a
+
+script:
+  - npm lint
+  - MONGODB_URL=mongodb://localhost/mongo-test npm test
+
+# after_success:
+#   - npm test 

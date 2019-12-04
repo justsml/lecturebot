@@ -2,11 +2,12 @@
 const cache = require("../cache.js");
 
 module.exports.formatMessage = message => {
+  console.log("INCOMING.PRE_FORMAT:", JSON.stringify(message, null, 2));
   if (message.thread_ts && message.thread_ts === message.ts) {
     // parent message doesn't need a thread_ts property
     message.thread_ts = null;
   }
-  return {
+  const msg = {
     ts: message.ts,
     client_msg_id: message && message.message && message.message.client_msg_id,
     thread_ts: message.thread_ts || null,
@@ -35,6 +36,8 @@ module.exports.formatMessage = message => {
       message.pinned_to ||
       (message && message.message && message.message.pinned_to)
   };
+  console.log("INCOMING.POST_FORMAT:", JSON.stringify(msg, null, 2));
+  return msg;
 };
 
 module.exports.formatReaction = ({

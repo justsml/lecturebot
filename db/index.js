@@ -18,7 +18,8 @@ mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useFindAndModify: false,
   autoIndex: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useUnifiedTopology: true
 });
 
 require("./models.js");

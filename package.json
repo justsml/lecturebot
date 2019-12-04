@@ -9,12 +9,16 @@
     "db:seed": "node db/seeds/index.js",
     "lint:fix": "eslint --fix './**/*.js'",
     "lint:quiet": "eslint --quiet './**/*.js'",
-    "lint": "eslint './**/*.js'"
+    "lint": "eslint './**/*.js'",
+    "test": "jest --detectOpenHandles"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint:fix"
     }
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "engines": {
     "node": ">=12"
@@ -45,6 +49,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "functional-promises": "^1.7.98",
     "husky": "^3.1.0",
+    "jest": "^24.9.0",
     "nodemon": "^2.0.0",
     "prettier": "^1.19.1"
   }
