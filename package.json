@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix './**/*.js'",
     "lint:quiet": "eslint --quiet './**/*.js'",
     "lint": "eslint './**/*.js'",
-    "test": "jest"
+    "test": "jest --setupFiles dotenv/config --detectOpenHandles"
   },
   "husky": {
     "hooks": {
@@ -18,16 +18,14 @@
     }
   },
   "jest": {
-    "setupFiles": ["dotenv/config"],
-    "detectOpenHandles": true,
     "testEnvironment": "node",
     "collectCoverage": true,
     "coverageReporters": ["text-summary", "html"],
     "collectCoverageFrom": [
-      "commands/**/*.{js,jsx}",
-      "skills/**/*.{js,jsx}",
-      "subscription/**/*.{js,jsx}",
-      "utils/**/*.{js,jsx}"
+      "**/*.{js,jsx}",
+      "!**/coverage/**",
+      "!**/node_modules/**",
+      "!**/vendor/**"
     ]
   },
   "engines": {
