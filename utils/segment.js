@@ -1,5 +1,5 @@
 const FP = require("functional-promises");
-const Analytics = FP.promisifyAll(require("analytics-node"));
+const Analytics = require("analytics-node");
 
 let analytics;
 
@@ -18,6 +18,7 @@ if (process.env.SEGMENT_IO_KEY) {
 
 module.exports.logEvent = eventName => data => {
   if (!analytics) return;
+  analytics.trackAsync = FP.promisify(analytics.track.bind(analytics));
 
   return analytics.trackAsync({
     event: eventName,

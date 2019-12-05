@@ -6,7 +6,7 @@ afterAll(async () => {
 });
 
 describe("Slash commands", () => {
-  it("can activate channel stats", async t => {
+  it("can activate channel stats", () => {
     return lecturebot.slashCommands["/lecturebot-activate"]({
       channel: "G00000000",
       user: "U00000000"

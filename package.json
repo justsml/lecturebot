@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix './**/*.js'",
     "lint:quiet": "eslint --quiet './**/*.js'",
     "lint": "eslint './**/*.js'",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --setupFiles dotenv/config --detectOpenHandles"
   },
   "husky": {
     "hooks": {
@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@babel/runtime": "^7.7.4",
+    "@types/jest": "^24.0.23",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.7.2",
     "eslint-config-google": "^0.14.0",
