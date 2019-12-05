@@ -32,3 +32,4 @@ jobs:
         npm test
       env:
         CI: true
+        SEGMENT_IO_KEY: ${{ secrets.SEGMENT_IO_KEY }}
