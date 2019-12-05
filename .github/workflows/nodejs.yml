@@ -3,9 +3,17 @@ name: Node CI
 on: [push]
 
 jobs:
-  build:
 
-    runs-on: ubuntu-latest
+  build:
+    
+    services:
+      mongodb:
+        image: mongo:3.4.23
+        ports:
+          - 27017:27017
+
+
+    runs-on: [ubuntu-18.04]
 
     strategy:
       matrix:
