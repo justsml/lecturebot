@@ -1,7 +1,7 @@
 require("dotenv").config();
 const log = require("debug")("lecturebot:db");
 const mongoose = require("mongoose");
-require("./models.js");
+const models = require("./models.js");
 
 // const { Schema, Collection } = mongoose
 const connString = process.env.MONGODB_URI || "localhost/lecture-hub";
@@ -31,3 +31,4 @@ const db = mongoose.connection
 
 module.exports = db;
 module.exports.mongoose = mongoose;
+module.exports.models = models;

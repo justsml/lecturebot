@@ -47,7 +47,7 @@ const slashCommands = {
 };
 
 module.exports = function init(controller) {
-  console.log(
+  log(
     `======\nRegistered Commands: \n  ${Object.keys(slashCommands).join(
       ",\n  "
     )}\n======\n`

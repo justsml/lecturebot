@@ -38,19 +38,19 @@ const create = (...args) => {
   return Subscription.create(...args);
 };
 
-const update = (...args) => {
-  return Subscription.update(...args);
-};
+// const update = (...args) => {
+//   return Subscription.update(...args);
+// };
 
-const deleteOne = (...args) => {
-  return Subscription.deleteOne(...args);
-};
+// const deleteOne = (...args) => {
+//   return Subscription.deleteOne(...args);
+// };
 
 module.exports = {
   getSubscriptions,
   removeSubscription,
   createSubscription,
-  create,
-  update,
-  deleteOne
+  create
+  // update,
+  // deleteOne
 };
