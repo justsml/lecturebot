@@ -40,7 +40,7 @@ const slashCommands = {
       log(`Is ${channel} in list: ${channelSubscriptions.join(", ")}...`);
       return `> The current channel ${cache.allChannels[channel] ||
         "[private channel]"} is ${
-        channelSubscriptions.includes(channel) ? "ENABLED" : "NOT ENABLED"
+        cache.isSubscribed(channel) ? "ENABLED" : "NOT ENABLED"
       }`;
     });
   }

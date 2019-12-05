@@ -11,8 +11,6 @@ module.exports = function init(controller) {
   controller.on("message_deleted", messageDeleted);
 };
 
-const isSubscribed = channel => cache.channelSubscriptions.includes(channel);
-
 const checkCache = async () => {
   if (cache.channelSubscriptions.length < 1) {
     cache.setChannelSubscriptions(await subscription.getSubscriptions());
@@ -26,8 +24,11 @@ module.exports.messageDeleted = messageDeleted;
 
 async function messageDeleted(bot, message) {
   await checkCache();
-  if (isSubscribed(message.channel)) {
-    log("message_deleted! In Subscription:", isSubscribed(message.channel));
+  if (cache.isSubscribed(message.channel)) {
+    log(
+      "message_deleted! In Subscription:",
+      cache.isSubscribed(message.channel)
+    );
     if (log.enabled)
       console.log("EVENT: message_deleted:", JSON.stringify(message));
 
@@ -38,11 +39,11 @@ async function messageDeleted(bot, message) {
   }
 }
 async function messageChanged(bot, message) {
-  log("message_changed! Subscribed?", isSubscribed(message.channel));
+  log("message_changed! Subscribed?", cache.isSubscribed(message.channel));
   if (log.enabled)
     console.log("EVENT: message_changed:", JSON.stringify(message));
   await checkCache();
-  if (isSubscribed(message.channel)) {
+  if (cache.isSubscribed(message.channel)) {
     const payload = formatMessage(message);
     logger.logMessageChanged(payload);
   }
@@ -53,16 +54,14 @@ async function message(bot, message) {
   log(
     "Event: message! Is Channel Subscribed?",
     cache.allChannels[message.channel],
-    isSubscribed(message.channel)
+    cache.isSubscribed(message.channel)
   );
   await checkCache();
-  if (isSubscribed(message.channel)) {
+  if (cache.isSubscribed(message.channel)) {
     const payload = formatMessage(message);
     log("EVENT: message:", JSON.stringify(message));
-    if (payload.event_type === "message") {
-      logger.logMessage(payload);
-    } else {
-      logger.logMessageReply(payload);
-    }
+    return payload.event_type === "message"
+      ? logger.logMessage(payload)
+      : logger.logMessageReply(payload);
   }
 }

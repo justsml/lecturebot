@@ -1,8 +1,9 @@
+const log = require("debug")("lecturebot:slack-transformer");
 /* eslint camelcase: 0 */
 const cache = require("../cache.js");
 
 module.exports.formatMessage = payload => {
-  console.log("INCOMING.PRE_FORMAT:", JSON.stringify(payload));
+  log("INCOMING.PRE_FORMAT:", JSON.stringify(payload));
   if (payload.thread_ts && payload.thread_ts === payload.ts) {
     // parent message doesn't need a thread_ts property
     payload.thread_ts = null;
@@ -11,11 +12,12 @@ module.exports.formatMessage = payload => {
 
   const msg = {
     ts: payload.ts,
-    client_msg_id: message && message.client_msg_id,
+    parent_user_id: payload.parent_user_id,
+    client_msg_id: payload.client_msg_id || (message && message.client_msg_id),
     thread_ts: payload.thread_ts || null,
     userId: payload.user ? payload.user : message && message.user,
     channel: payload.channel,
-    channel_name: cache.allChannels[payload.channel],
+    channel_name: cache.allChannels[payload.channel] || "Unknown",
     text: payload.text ? payload.text : message && message.text,
     team: payload.team,
     event_type: payload.thread_ts
@@ -30,13 +32,25 @@ module.exports.formatMessage = payload => {
     pinned_to: payload.pinned_to || (message && message.pinned_to)
   };
 
-  if (message.edited) {
-    payload.userId =
-      payload.userId || (message && message.edited && message.edited.user);
-    payload.edited_ts = message && message.edited && message.edited.ts;
+  if (message && message.edited) {
+    msg.userId =
+      msg.userId ||
+      payload.userId ||
+      (message && message.edited && message.edited.user);
+    msg.edited_ts = message && message.edited && message.edited.ts;
   }
 
-  console.log("POST_FORMAT:", JSON.stringify(msg));
+  if (payload && payload.deleted_ts) {
+    msg.userId = msg.userId || payload.incoming_message.recipient.id;
+    msg.thread_ts = msg.thread_ts || payload.previous_message.thread_ts;
+    msg.text = msg.text || payload.previous_message.text;
+    msg.parent_user_id =
+      msg.parent_user_id || payload.previous_message.parent_user_id;
+    msg.client_msg_id =
+      msg.client_msg_id || payload.previous_message.client_msg_id;
+  }
+
+  log("POST_FORMAT:", JSON.stringify(msg));
   return msg;
 };
 

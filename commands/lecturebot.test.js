@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const connection = require("../db");
+const Subscription = mongoose.model("Subscription");
 const lecturebot = require("./lecturebot.js");
 
 afterAll(async () => {
@@ -7,7 +8,6 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  const Subscription = mongoose.model("Subscription");
   await Subscription.deleteMany({ channel: "G00000000" });
 });
 
@@ -18,6 +18,15 @@ const subscribeChannel = () =>
     user: "U00000000"
   });
 
+it("can check non-subscribed channel", () => {
+  return lecturebot.slashCommands["/lecturebot-check"]({
+    channel: "G00000000",
+    user: "U00000000"
+  }).then(async response => {
+    const subscriptions = await Subscription.find({});
+    expect(subscriptions).toHaveLength(0);
+  });
+});
 // describe("Slash commands", () => {
 it("can activate channel stats", () => {
   return subscribeChannel().then(response => {
@@ -43,14 +52,7 @@ it("can deactivate channel", () => {
     });
   });
 });
-it("can check non-subscribed channel", () => {
-  return lecturebot.slashCommands["/lecturebot-check"]({
-    channel: "G00000000",
-    user: "U00000000"
-  }).then(response => {
-    expect(response).toContain("NOT ENABLED");
-  });
-});
+
 it("can check subscribed channel", () => {
   return subscribeChannel().then(() => {
     return lecturebot.slashCommands["/lecturebot-check"]({

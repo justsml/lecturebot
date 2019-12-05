@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix './**/*.js'",
     "lint:quiet": "eslint --quiet './**/*.js'",
     "lint": "eslint './**/*.js'",
-    "test": "jest --setupFiles dotenv/config --setupFiles ./db/index.js --detectOpenHandles --forceExit --maxWorkers=2"
+    "test": "jest --setupFiles dotenv/config --setupFiles ./db/index.js --detectOpenHandles --forceExit --maxWorkers=1"
   },
   "husky": {
     "hooks": {

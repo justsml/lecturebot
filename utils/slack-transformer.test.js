@@ -1,36 +1,23 @@
-const messageLogger = require("./message-logger.js");
+const { formatMessage } = require("./slack-transformer.js");
 
-const mockController = {
-  on: jest.fn()
-};
-
-it("can register event listeners", () => {
-  messageLogger(mockController);
-  expect(mockController.on.mock.calls.length).toEqual(3);
-  expect(mockController.on.mock.calls[0][0]).toEqual("message");
-  expect(mockController.on.mock.calls[1][0]).toEqual("message_changed");
-  expect(mockController.on.mock.calls[2][0]).toEqual("message_deleted");
+it("can transform message payload", () => {
+  const msgEvent = formatMessage(messagePayload);
+  expect(msgEvent.userId).toBe(messagePayload.user);
 });
-
-it("can log main messages", () => {
-  const bot = jest.fn();
-  const result = messageLogger.message(bot, messagePayload);
-  expect(bot.mock.calls.length).toBe(0);
-  return result;
+it("can transform a reply", () => {
+  const msgEvent = formatMessage(aReplyMessage);
+  expect(msgEvent.userId).toBe(aReplyMessage.user);
+  expect(msgEvent.thread_ts).toBeTruthy();
+  expect(msgEvent.client_msg_id).toBe(aReplyMessage.client_msg_id);
+  // console.log(msgEvent);
 });
-
-it("can log reply messages", () => {
-  const bot = jest.fn();
-  const result = messageLogger.message(bot, aReplyMessage);
-  expect(bot.mock.calls.length).toBe(0);
-  return result;
-});
-
-it("can log deleted messages", () => {
-  const bot = jest.fn();
-  const result = messageLogger.messageDeleted(bot, aDeletedMessage);
-  expect(bot.mock.calls.length).toBe(0);
-  return result;
+it("can transform a delete message", () => {
+  const msgEvent = formatMessage(aDeletedMessage);
+  expect(msgEvent.userId).toBe(aDeletedMessage.incoming_message.recipient.id);
+  expect(msgEvent.thread_ts).toBeTruthy();
+  expect(msgEvent.client_msg_id).toBe(
+    aDeletedMessage.previous_message.client_msg_id
+  );
 });
 
 const messagePayload = {
@@ -186,6 +173,7 @@ const aReplyMessage = {
     type: "message"
   }
 };
+
 const aDeletedMessage = {
   type: "message_deleted",
   subtype: "message_deleted",
