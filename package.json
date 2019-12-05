@@ -20,7 +20,10 @@
   "jest": {
     "testEnvironment": "node",
     "collectCoverage": true,
-    "coverageReporters": ["text-summary", "html"],
+    "coverageReporters": [
+      "text-summary",
+      "html"
+    ],
     "collectCoverageFrom": [
       "**/*.{js,jsx}",
       "!**/coverage/**",
