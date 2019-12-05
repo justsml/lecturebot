@@ -33,6 +33,13 @@ it("can log deleted messages", () => {
   return result;
 });
 
+it("can log changed messages", () => {
+  const bot = jest.fn();
+  const result = messageLogger.messageChanged(bot, aChangedMessage);
+  expect(bot.mock.calls.length).toBe(0);
+  return result;
+});
+
 const messagePayload = {
   client_msg_id: "0b1686b3-92ab-45d4-be58-ff7319a12a7d",
   type: "message",
@@ -273,6 +280,138 @@ const aDeletedMessage = {
       channel_type: "group",
       team: "T5A06CG1F",
       botkitEventType: "message_deleted"
+    },
+    text: null,
+    type: "event"
+  }
+};
+const aChangedMessage = {
+  type: "message_changed",
+  subtype: "message_changed",
+  hidden: true,
+  message: {
+    client_msg_id: "bf491772-af99-4b7f-8545-30414247a4c8",
+    type: "message",
+    text: "Test - Fixed :success:",
+    user: "U5AGW6XH8",
+    team: "T5A06CG1F",
+    edited: { user: "U5AGW6XH8", ts: "1575555028.000000" },
+    blocks: [
+      {
+        type: "rich_text",
+        block_id: "qE4OJ",
+        elements: [
+          {
+            type: "rich_text_section",
+            elements: [
+              { type: "text", text: "Test - Fixed " },
+              { type: "emoji", name: "success" }
+            ]
+          }
+        ]
+      }
+    ],
+    ts: "1575555011.000200",
+    user_team: "T5A06CG1F",
+    source_team: "T5A06CG1F"
+  },
+  channel: "GPRU48MMH",
+  previous_message: {
+    client_msg_id: "bf491772-af99-4b7f-8545-30414247a4c8",
+    type: "message",
+    text: "Tets",
+    user: "U5AGW6XH8",
+    ts: "1575555011.000200",
+    team: "T5A06CG1F",
+    blocks: [
+      {
+        type: "rich_text",
+        block_id: "Cqp",
+        elements: [
+          {
+            type: "rich_text_section",
+            elements: [{ type: "text", text: "Tets" }]
+          }
+        ]
+      }
+    ]
+  },
+  event_ts: "1575555028.000300",
+  ts: "1575555028.000300",
+  channel_type: "group",
+  team: "T5A06CG1F",
+  botkitEventType: "message_changed",
+  text: null,
+  reference: {
+    activityId: "1575555028.000300",
+    user: {},
+    bot: { id: "U5AGW6XH8" },
+    conversation: { id: "GPRU48MMH", team: "T5A06CG1F" },
+    channelId: "slack"
+  },
+  incoming_message: {
+    id: "1575555028.000300",
+    timestamp: "2019-12-05T14:10:29.489Z",
+    channelId: "slack",
+    conversation: { id: "GPRU48MMH", team: "T5A06CG1F" },
+    from: {},
+    recipient: { id: "U5AGW6XH8" },
+    channelData: {
+      type: "message",
+      subtype: "message_changed",
+      hidden: true,
+      message: {
+        client_msg_id: "bf491772-af99-4b7f-8545-30414247a4c8",
+        type: "message",
+        text: "Test - Fixed :success:",
+        user: "U5AGW6XH8",
+        team: "T5A06CG1F",
+        edited: { user: "U5AGW6XH8", ts: "1575555028.000000" },
+        blocks: [
+          {
+            type: "rich_text",
+            block_id: "qE4OJ",
+            elements: [
+              {
+                type: "rich_text_section",
+                elements: [
+                  { type: "text", text: "Test - Fixed " },
+                  { type: "emoji", name: "success" }
+                ]
+              }
+            ]
+          }
+        ],
+        ts: "1575555011.000200",
+        user_team: "T5A06CG1F",
+        source_team: "T5A06CG1F"
+      },
+      channel: "GPRU48MMH",
+      previous_message: {
+        client_msg_id: "bf491772-af99-4b7f-8545-30414247a4c8",
+        type: "message",
+        text: "Tets",
+        user: "U5AGW6XH8",
+        ts: "1575555011.000200",
+        team: "T5A06CG1F",
+        blocks: [
+          {
+            type: "rich_text",
+            block_id: "Cqp",
+            elements: [
+              {
+                type: "rich_text_section",
+                elements: [{ type: "text", text: "Tets" }]
+              }
+            ]
+          }
+        ]
+      },
+      event_ts: "1575555028.000300",
+      ts: "1575555028.000300",
+      channel_type: "group",
+      team: "T5A06CG1F",
+      botkitEventType: "message_changed"
     },
     text: null,
     type: "event"

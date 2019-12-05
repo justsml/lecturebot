@@ -29,8 +29,8 @@ async function messageDeleted(bot, message) {
       "message_deleted! In Subscription:",
       cache.isSubscribed(message.channel)
     );
-    if (log.enabled)
-      console.log("EVENT: message_deleted:", JSON.stringify(message));
+    // if (log.enabled)
+    log("EVENT: message_deleted:", JSON.stringify(message));
 
     const payload = formatMessage(message);
     payload.deleted_ts = message.deleted_ts;
@@ -40,8 +40,8 @@ async function messageDeleted(bot, message) {
 }
 async function messageChanged(bot, message) {
   log("message_changed! Subscribed?", cache.isSubscribed(message.channel));
-  if (log.enabled)
-    console.log("EVENT: message_changed:", JSON.stringify(message));
+  // if (log.enabled)
+  log("EVENT: message_changed:", JSON.stringify(message));
   await checkCache();
   if (cache.isSubscribed(message.channel)) {
     const payload = formatMessage(message);
@@ -50,7 +50,8 @@ async function messageChanged(bot, message) {
 }
 
 async function message(bot, message) {
-  if (log.enabled) console.log("EVENT: message:", JSON.stringify(message));
+  // if (log.enabled)
+  log("EVENT: message:", JSON.stringify(message));
   log(
     "Event: message! Is Channel Subscribed?",
     cache.allChannels[message.channel],

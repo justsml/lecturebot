@@ -33,3 +33,10 @@ jobs:
       env:
         CI: true
         SEGMENT_IO_KEY: ${{ secrets.SEGMENT_IO_KEY }}
+        # NOTE: NEEDS REAL SLACK TOKENS FOR TESTING (getting channels. DOES NOT POST MESSAGES)
+        SLACK_OAUTH_ACCESS_TOKEN: ${{ secrets.SLACK_OAUTH_ACCESS_TOKEN }}
+        SLACK_BOT_OAUTH_ACCESS_TOKEN: ${{ secrets.SLACK_BOT_OAUTH_ACCESS_TOKEN }}
+        SLACK_REDIRECT_URI: ${{ secrets.SLACK_REDIRECT_URI }}
+        SLACK_CLIENT_ID: ${{ secrets.SLACK_CLIENT_ID }}
+        SLACK_CLIENT_SECRET: ${{ secrets.SLACK_CLIENT_SECRET }}
+        SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
