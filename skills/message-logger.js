@@ -4,82 +4,65 @@ const cache = require("../cache.js");
 const logger = require("../utils/slack-logger.js");
 const { formatMessage } = require("../utils/slack-transformer.js");
 
+module.exports = function init(controller) {
+  log("Registered Event Handler: message, message_changed, message_deleted");
+  controller.on("message", message);
+  controller.on("message_changed", messageChanged);
+  controller.on("message_deleted", messageDeleted);
+};
+
+const isSubscribed = channel => cache.channelSubscriptions.includes(channel);
+
 const checkCache = async () => {
   if (cache.channelSubscriptions.length < 1) {
     cache.setChannelSubscriptions(await subscription.getSubscriptions());
   }
 };
 
-module.exports = function init(controller) {
-  log("Registered Event Handler: message_changed");
-  controller.on("message_changed", async (bot, message) => {
-    log(
-      "Event: message_changed! Is Channel Subscribed?",
-      cache.allChannels[message.channel],
-      cache.channelSubscriptions.includes(message.channel)
-    );
-    await checkCache();
-    if (cache.channelSubscriptions.includes(message.channel)) {
-      // console.log(
-      //   "EVENT: message_changed:",
-      //   message.channel,
-      //   cache.allChannels[message.channel],
-      //   JSON.stringify(message)
-      // );
-      const payload = formatMessage(message);
-      payload.userId =
-        payload.userId ||
-        (payload.message &&
-          payload.message.edited &&
-          payload.message.edited.user);
-      payload.edited_ts =
-        payload.message && payload.message.edited && payload.message.edited.ts;
-      logger.logMessageChanged(payload);
-    }
-  });
+// For testing!
+module.exports.message = message;
+module.exports.messageChanged = messageChanged;
+module.exports.messageDeleted = messageDeleted;
 
-  controller.on("message_deleted", async (bot, message) => {
-    log(
-      "Event: message_deleted! Is Channel Subscribed?",
-      cache.allChannels[message.channel],
-      cache.channelSubscriptions.includes(message.channel)
-    );
-    await checkCache();
-    if (cache.channelSubscriptions.includes(message.channel)) {
-      // console.log(
-      //   "EVENT: message_deleted:",
-      //   message.channel,
-      //   cache.allChannels[message.channel],
-      //   JSON.stringify(message)
-      // );
-      const payload = formatMessage(message);
-      payload.deleted_ts = message.deleted_ts;
-      payload.userId = payload.userId || "n/a"; // NOTE: botkit seems to eat the user id for deletes
-      logger.logMessageDeleted(payload);
-    }
-  });
+async function messageDeleted(bot, message) {
+  await checkCache();
+  if (isSubscribed(message.channel)) {
+    log("message_deleted! In Subscription:", isSubscribed(message.channel));
+    if (log.enabled)
+      console.log("EVENT: message_deleted:", JSON.stringify(message));
 
-  controller.on("message", async (bot, message) => {
-    log(
-      "Event: message! Is Channel Subscribed?",
-      cache.allChannels[message.channel],
-      cache.channelSubscriptions.includes(message.channel)
-    );
-    await checkCache();
-    if (cache.channelSubscriptions.includes(message.channel)) {
-      const payload = formatMessage(message);
-      // console.log(
-      //   "EVENT: message:",
-      //   message.channel,
-      //   cache.allChannels[message.channel],
-      //   JSON.stringify(message)
-      // );
-      // console.log('channel SUBSCRIBED', message.channel, cache.allChannels[message.channel], payload)
-      if (payload.event_type === "message") {
-        logger.logMessage(payload);
-      } else {
-        logger.logMessageReply(payload);
-      }
+    const payload = formatMessage(message);
+    payload.deleted_ts = message.deleted_ts;
+    payload.userId = payload.userId || "n/a"; // NOTE: botkit seems to eat the user id for deletes
+    logger.logMessageDeleted(payload);
+  }
+}
+async function messageChanged(bot, message) {
+  log("message_changed! Subscribed?", isSubscribed(message.channel));
+  if (log.enabled)
+    console.log("EVENT: message_changed:", JSON.stringify(message));
+  await checkCache();
+  if (isSubscribed(message.channel)) {
+    const payload = formatMessage(message);
+    logger.logMessageChanged(payload);
+  }
+}
+
+async function message(bot, message) {
+  if (log.enabled) console.log("EVENT: message:", JSON.stringify(message));
+  log(
+    "Event: message! Is Channel Subscribed?",
+    cache.allChannels[message.channel],
+    isSubscribed(message.channel)
+  );
+  await checkCache();
+  if (isSubscribed(message.channel)) {
+    const payload = formatMessage(message);
+    log("EVENT: message:", JSON.stringify(message));
+    if (payload.event_type === "message") {
+      logger.logMessage(payload);
+    } else {
+      logger.logMessageReply(payload);
     }
-  });
-};
+  }
+}

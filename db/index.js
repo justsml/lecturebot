@@ -1,5 +1,8 @@
 require("dotenv").config();
+const log = require("debug")("lecturebot:db");
 const mongoose = require("mongoose");
+require("./models.js");
+
 // const { Schema, Collection } = mongoose
 const connString = process.env.MONGODB_URI || "localhost/lecture-hub";
 
@@ -18,13 +21,13 @@ mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useFindAndModify: false,
   autoIndex: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useUnifiedTopology: true
 });
 
-require("./models.js");
-
 const db = mongoose.connection
-  .on("error", console.error.bind(console, "mongodb connection error:"))
-  .once("open", console.info.bind(console, "mongodb successfully connected:"));
+  .on("error", () => log("mongodb connection error!"))
+  .once("open", () => log("mongodb successfully connected!"));
 
 module.exports = db;
+module.exports.mongoose = mongoose;

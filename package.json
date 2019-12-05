@@ -9,12 +9,27 @@
     "db:seed": "node db/seeds/index.js",
     "lint:fix": "eslint --fix './**/*.js'",
     "lint:quiet": "eslint --quiet './**/*.js'",
-    "lint": "eslint './**/*.js'"
+    "lint": "eslint './**/*.js'",
+    "test": "jest --setupFiles dotenv/config --setupFiles ./db/index.js --detectOpenHandles --forceExit --maxWorkers=2"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint:fix"
     }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageReporters": [
+      "text-summary",
+      "html"
+    ],
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/coverage/**",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ]
   },
   "engines": {
     "node": ">=12"
@@ -37,6 +52,7 @@
   },
   "devDependencies": {
     "@babel/runtime": "^7.7.4",
+    "@types/jest": "^24.0.23",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.7.2",
     "eslint-config-google": "^0.14.0",
@@ -45,6 +61,7 @@
     "eslint-plugin-prettier": "^3.1.1",
     "functional-promises": "^1.7.98",
     "husky": "^3.1.0",
+    "jest": "^24.9.0",
     "nodemon": "^2.0.0",
     "prettier": "^1.19.1"
   }

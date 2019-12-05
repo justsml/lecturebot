@@ -1,3 +1,4 @@
+const FP = require("functional-promises");
 const Analytics = require("analytics-node");
 
 let analytics;
@@ -17,17 +18,12 @@ if (process.env.SEGMENT_IO_KEY) {
 
 module.exports.logEvent = eventName => data => {
   if (!analytics) return;
+  analytics.trackAsync = FP.promisify(analytics.track.bind(analytics));
 
-  analytics.track(
-    {
-      event: eventName,
-      userId: data.user || data.userId,
-      timestamp: new Date(),
-      properties: data
-    },
-    (err, data) => {
-      if (err)
-        return console.error(`SEGMENT FAILED TO LOG ${eventName}:`, err, data);
-    }
-  );
+  return analytics.trackAsync({
+    event: eventName,
+    userId: data.user || data.userId,
+    timestamp: new Date(),
+    properties: data
+  });
 };

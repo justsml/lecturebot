@@ -1,3 +1,4 @@
+const log = require("debug")("lecturebot:reaction-logger");
 const subscription = require("../subscription/index.js");
 const cache = require("../cache.js");
 const logger = require("../utils/slack-logger.js");
@@ -9,32 +10,26 @@ const checkCache = async () => {
   }
 };
 
-module.exports = function init(controller) {
-  controller.on("reaction_added", async (bot, event) => {
-    await checkCache();
-    if (cache.channelSubscriptions.includes(event.channel)) {
-      console.log(
-        "REACTION ADDED",
-        event.channel,
-        cache.allChannels[event.channel],
-        JSON.stringify(event)
-      );
-      const payload = formatReaction(event);
-      logger.logReactionAdded(payload);
-    }
-  });
+async function reactionAdded(bot, event) {
+  await checkCache();
+  if (cache.channelSubscriptions.includes(event.channel)) {
+    console.log("REACTION ADDED", JSON.stringify(event));
+    const payload = formatReaction(event);
+    logger.logReactionAdded(payload);
+  }
+}
 
-  controller.on("reaction_removed", async (bot, event) => {
-    await checkCache();
-    if (cache.channelSubscriptions.includes(event.channel)) {
-      console.log(
-        "REACTION REMOVED",
-        event.channel,
-        cache.allChannels[event.channel],
-        JSON.stringify(event)
-      );
-      const payload = formatReaction(event);
-      logger.logReactionRemoved(payload);
-    }
-  });
+async function reactionRemoved(bot, event) {
+  await checkCache();
+  if (cache.channelSubscriptions.includes(event.channel)) {
+    console.log("REACTION REMOVED", JSON.stringify(event));
+    const payload = formatReaction(event);
+    logger.logReactionRemoved(payload);
+  }
+}
+
+module.exports = function init(controller) {
+  log("Listening for: reaction_added, reaction_removed");
+  controller.on("reaction_added", reactionAdded);
+  controller.on("reaction_removed", reactionRemoved);
 };
