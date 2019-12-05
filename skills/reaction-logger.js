@@ -33,3 +33,6 @@ module.exports = function init(controller) {
   controller.on("reaction_added", reactionAdded);
   controller.on("reaction_removed", reactionRemoved);
 };
+
+module.exports.reactionAdded = reactionAdded;
+module.exports.reactionRemoved = reactionRemoved;

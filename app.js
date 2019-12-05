@@ -50,7 +50,7 @@ server.get("/install/auth", async (req, res) => {
   try {
     const results = await controller.adapter.validateOauthCode(req.query.code);
 
-    console.log("FULL OAUTH DETAILS", results);
+    log("FULL OAUTH DETAILS", JSON.stringify(results));
 
     if (results.bot && results.bot.bot_user_id) {
       await addOrUpdateBot(results);
