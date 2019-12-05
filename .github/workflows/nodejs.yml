@@ -33,3 +33,9 @@ jobs:
       env:
         CI: true
         SEGMENT_IO_KEY: ${{ secrets.SEGMENT_IO_KEY }}
+        # NOTE: FAKE SLACK TOKENS
+        SLACK_REDIRECT_URI: https://www.example./com/
+        SLACK_CLIENT_ID: 123456789
+        SLACK_CLIENT_SECRET: vnurihgwnhhgiuwhrivahnvk
+        SLACK_SIGNING_SECRET: vinvnrbgurbugrbkghjbaerjh 
+        SLACK_BOT_OAUTH_ACCESS_TOKEN: efhuwbvjhabjhrbvuyiwer32455
