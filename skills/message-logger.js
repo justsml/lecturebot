@@ -28,7 +28,9 @@ async function messageDeleted(bot, message) {
   await checkCache();
   if (isSubscribed(message.channel)) {
     log("message_deleted! In Subscription:", isSubscribed(message.channel));
-    log("EVENT: message_deleted:", JSON.stringify(message));
+    if (log.enabled)
+      console.log("EVENT: message_deleted:", JSON.stringify(message));
+
     const payload = formatMessage(message);
     payload.deleted_ts = message.deleted_ts;
     payload.userId = payload.userId || "n/a"; // NOTE: botkit seems to eat the user id for deletes
@@ -37,7 +39,8 @@ async function messageDeleted(bot, message) {
 }
 async function messageChanged(bot, message) {
   log("message_changed! Subscribed?", isSubscribed(message.channel));
-  log("EVENT: message_changed:", JSON.stringify(message));
+  if (log.enabled)
+    console.log("EVENT: message_changed:", JSON.stringify(message));
   await checkCache();
   if (isSubscribed(message.channel)) {
     const payload = formatMessage(message);
@@ -46,7 +49,7 @@ async function messageChanged(bot, message) {
 }
 
 async function message(bot, message) {
-  log("EVENT: message:", JSON.stringify(message));
+  if (log.enabled) console.log("EVENT: message:", JSON.stringify(message));
   log(
     "Event: message! Is Channel Subscribed?",
     cache.allChannels[message.channel],
