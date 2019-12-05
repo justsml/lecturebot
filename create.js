@@ -9,7 +9,7 @@ const {
   SlackEventMiddleware
 } = require("botbuilder-adapter-slack");
 
-module.exports.createBot = function createBot({ scopes = ["bot"] }) {
+module.exports.createBot = function createBot({ scopes }) {
   // if (process.env.MONGODB_URI) {
   //   botOptions.storage = mongoStorage({ mongoUri: process.env.MONGODB_URI })
   // } else {
@@ -21,21 +21,23 @@ module.exports.createBot = function createBot({ scopes = ["bot"] }) {
     clientSecret: config.slack.clientSecret,
     clientSigningSecret: config.slack.signingSecret,
     redirectUri: config.slack.redirectUri,
-    logger: {
-      log: (level, ...args) => {
-        args.every(arg => typeof arg === "string")
-          ? console[level](args.join(" "))
-          : console[level](...args);
-        if (level === "error" || level === "warn") log(...args);
-      }
-    },
+    // logger: {
+    //   log: (level, ...args) => {
+    //     args.every(arg => typeof arg === "string")
+    //       ? console[level](args.join(" "))
+    //       : console[level](...args);
+    //     if (level === "error" || level === "warn") log(...args);
+    //   }
+    // },
     scopes
   });
   adapter.use(new SlackEventMiddleware());
   adapter.use(new SlackMessageTypeMiddleware());
   const controller = new Botkit({
     webhook_uri: "/api/messages",
-    adapter
+    adapter,
+    disable_webserver: config.isCI
+    // storage: mongoStorage
   });
   log("Created Botkit Client w/ Slack Adapter");
   return { controller, adapter };

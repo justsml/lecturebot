@@ -6,7 +6,7 @@ const mockController = {
 
 it("can register event listeners", () => {
   reactionLogger(mockController);
-  expect(mockController.on.mock.calls.length).toEqual(3);
+  expect(mockController.on.mock.calls.length).toEqual(2);
   expect(mockController.on.mock.calls[0][0]).toEqual("reaction_added");
   expect(mockController.on.mock.calls[1][0]).toEqual("reaction_removed");
 });

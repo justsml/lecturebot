@@ -13,7 +13,7 @@ const checkCache = async () => {
 async function reactionAdded(bot, event) {
   await checkCache();
   if (cache.isSubscribed(event.channel)) {
-    console.log("REACTION ADDED", JSON.stringify(event));
+    log("REACTION ADDED", JSON.stringify(event));
     const payload = formatReaction(event);
     logger.logReactionAdded(payload);
   }
@@ -22,7 +22,7 @@ async function reactionAdded(bot, event) {
 async function reactionRemoved(bot, event) {
   await checkCache();
   if (cache.isSubscribed(event.channel)) {
-    console.log("REACTION REMOVED", JSON.stringify(event));
+    log("REACTION REMOVED", JSON.stringify(event));
     const payload = formatReaction(event);
     logger.logReactionRemoved(payload);
   }

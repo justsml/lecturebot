@@ -1,31 +1,12 @@
 require("../db/index.js");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
-const log = require("debug")("slackbot:authHandler");
-
-function processAuthPayload(data) {
-  if (!data.ok) {
-    log("Auth Request failed:", data);
-    return Promise.reject(new Error("Auth Request failed!"));
-  }
-  if (!data.access_token) {
-    log("Failed to get access token:", data);
-    return Promise.reject(new Error("Access Token Missing!"));
-  }
-  if (data.bot && data.bot.bot_user_id) {
-    return addOrUpdateBot(data);
-  }
-  if (data.user && data.user.id) {
-    return addOrUpdateUser(data);
-  }
-  log("non user payload:", data);
-  return data;
-}
+const log = require("debug")("slackbot:user");
 
 function addOrUpdateUser(data) {
   return getByUserSlackId({ userSlackId: data.user.id }).then(user => {
     if (user) {
-      console.log(
+      log(
         "\nABOUT TO UPDATE",
         user.name,
         "\nNew Scope:",
@@ -45,7 +26,7 @@ function addOrUpdateUser(data) {
         metadata: data
       });
     } else {
-      console.log("\nCREATING USER FOR SLACKID:", data.user.id);
+      log("\nCREATING USER FOR SLACKID:", data.user.id);
       return create({
         name: data.user.name,
         email: data.user.email,
@@ -63,28 +44,41 @@ function addOrUpdateUser(data) {
 }
 
 function addOrUpdateBot(data) {
-  return getByUserSlackId({ botSlackId: data.bot.bot_user_id }).then(user => {
+  log("DATA", JSON.stringify(data, null, 2));
+  const userSlackId =
+    data.userSlackId || data.user_id || (data.user && data.user.id);
+  const botSlackId = data.bot && data.bot.bot_user_id;
+
+  return getUserByQuery({
+    $or: [{ botSlackId }, { userSlackId }]
+  }).then(user => {
     if (user) {
-      console.log("UPDATING BOT:", user.name);
+      log("UPDATING BOT:", data);
       return patch({
         _id: user._id,
         role: "Bot",
-        name: data.team_name,
-        token: data.access_token,
-        userSlackId: data.user_id,
-        botSlackId: data.bot && data.bot.bot_user_id,
-        teamSlackId: data.team && data.team.id,
+        name: data.team_name || data.name,
+        realName: data.name || data.team_name,
+        scope: data.scope,
+        token: data.token || data.access_token,
+        userSlackId,
+        botSlackId,
+        teamSlackId:
+          data.teamSlackId || data.team_id || (data.team && data.team.id),
         metadata: data
       });
     } else {
-      console.log("CREATING BOT FOR SLACKID:", data.bot.bot_user_id);
+      log("CREATING BOT FOR SLACKID:", data.bot.bot_user_id);
       return create({
         role: "Bot",
-        name: data.team_name,
-        token: data.access_token,
-        userSlackId: data.user_id,
-        botSlackId: data.bot && data.bot.bot_user_id,
-        teamSlackId: data.team && data.team.id,
+        name: data.team_name || data.name,
+        realName: data.name || data.team_name,
+        scope: data.scope,
+        token: data.token || data.access_token,
+        userSlackId,
+        botSlackId,
+        teamSlackId:
+          data.teamSlackId || data.team_id || (data.team && data.team.id),
         metadata: data
       });
     }
@@ -107,16 +101,20 @@ const getByUserSlackId = ({ userSlackId }) => {
   return User.findOne({ userSlackId }).select("-metadata");
 };
 
+const getUserByQuery = query => {
+  return User.findOne(query).select("-metadata");
+};
+
 const getByEmail = ({ email }) => {
   return User.findOne({ email }).select("-metadata");
 };
 
-const createIfNotExists = ({ userSlackId, ...args }) => {
-  return User.findOne({ userSlackId }).then(user => {
-    if (user && user.userSlackId) return null;
-    return User.create({ userSlackId, ...args });
-  });
-};
+// const createIfNotExists = ({ userSlackId, ...args }) => {
+//   return User.findOne({ userSlackId }).then(user => {
+//     if (user && user.userSlackId) return null;
+//     return User.create({ userSlackId, ...args });
+//   });
+// };
 
 const create = ({
   name,
@@ -194,14 +192,15 @@ module.exports = {
   getAll,
   getOne,
   getByUserSlackId,
+  getUserByQuery,
   getByEmail,
-  createIfNotExists,
+  // createIfNotExists,
   create,
   update,
   updateToken,
   patch,
   remove,
-  processAuthPayload,
   addOrUpdateBot,
-  addOrUpdateUser
+  addOrUpdateUser,
+  User
 };
