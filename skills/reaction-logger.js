@@ -29,7 +29,7 @@ async function reactionRemoved(bot, event) {
 }
 
 module.exports = function init(controller) {
-  log("");
+  log("Listening for: reaction_added, reaction_removed");
   controller.on("reaction_added", reactionAdded);
   controller.on("reaction_removed", reactionRemoved);
 };

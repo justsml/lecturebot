@@ -19,6 +19,11 @@ const checkCache = async () => {
   }
 };
 
+// For testing!
+module.exports.message = message;
+module.exports.messageChanged = messageChanged;
+module.exports.messageDeleted = messageDeleted;
+
 async function messageDeleted(bot, message) {
   await checkCache();
   if (isSubscribed(message.channel)) {
@@ -32,6 +37,7 @@ async function messageDeleted(bot, message) {
 }
 async function messageChanged(bot, message) {
   log("message_changed! Subscribed?", isSubscribed(message.channel));
+  log("EVENT: message_changed:", JSON.stringify(message));
   await checkCache();
   if (isSubscribed(message.channel)) {
     const payload = formatMessage(message);
@@ -40,6 +46,7 @@ async function messageChanged(bot, message) {
 }
 
 async function message(bot, message) {
+  log("EVENT: message:", JSON.stringify(message));
   log(
     "Event: message! Is Channel Subscribed?",
     cache.allChannels[message.channel],
