@@ -1,10 +1,12 @@
 const subscription = require("../subscription");
 const cache = require("../cache.js");
 const log = require("debug")("lecturebot:commands");
+const logCache = require("debug")("lecturebot:cache");
 
-const updateSubscriptions = async () => {
+const updateSubscriptions = async data => {
   cache.setChannelSubscriptions(await subscription.getSubscriptions());
-  console.log("UPDATED cache.channelSubscriptions", cache.channelSubscriptions);
+  logCache("UPDATED cache.channelSubscriptions", cache.channelSubscriptions);
+  return data;
 };
 
 const slashCommands = {
@@ -13,11 +15,11 @@ const slashCommands = {
     return subscription
       .createSubscription({ channel, user })
       .then(updateSubscriptions)
-      .then(
-        message =>
-          message ||
-          `> Lecturebot activated by ${user} in ${cache.allChannels[channel] ||
-            "[private channel]"}`
+      .then(message =>
+        typeof message === "string"
+          ? message
+          : `> Lecturebot activated in ${cache.allChannels[channel] ||
+              "[private channel]"}`
       );
   },
   "/lecturebot-deactivate": ({ channel, user }) => {
@@ -28,7 +30,7 @@ const slashCommands = {
       .then(
         message =>
           message ||
-          `> Lecturebot disabled by ${user} in ${cache.allChannels[channel] ||
+          `> Lecturebot disabled in ${cache.allChannels[channel] ||
             "[private channel]"}`
       );
   },
@@ -61,7 +63,7 @@ module.exports = function init(controller) {
       return;
     }
 
-    log(`Command ${command} by ${user} has payload: `, JSON.stringify(message));
+    log(`Command ${command} has payload: `, JSON.stringify(message));
 
     return slashCommands[command]({ channel, user })
       .then(displayMessage => bot.replyPublic(message, `${displayMessage}`))

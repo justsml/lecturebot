@@ -30,3 +30,4 @@ const db = mongoose.connection
   .once("open", () => log("mongodb successfully connected!"));
 
 module.exports = db;
+module.exports.mongoose = mongoose;

@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const connection = require("../db");
 const lecturebot = require("./lecturebot.js");
 
@@ -5,17 +6,62 @@ afterAll(async () => {
   await connection.close();
 });
 
-describe("Slash commands", () => {
-  it("can activate channel stats", () => {
-    return lecturebot.slashCommands["/lecturebot-activate"]({
+beforeEach(async () => {
+  const Subscription = mongoose.model("Subscription");
+  await Subscription.deleteMany({ channel: "G00000000" });
+});
+
+// Helpers
+const subscribeChannel = () =>
+  lecturebot.slashCommands["/lecturebot-activate"]({
+    channel: "G00000000",
+    user: "U00000000"
+  });
+
+// describe("Slash commands", () => {
+it("can activate channel stats", () => {
+  return subscribeChannel().then(response => {
+    expect(response).toContain("Created subscription");
+  });
+});
+
+it("cannot double-activate channel", () => {
+  return subscribeChannel()
+    .then(subscribeChannel)
+    .then(response => {
+      expect(response).toContain("Already exists.");
+    });
+});
+
+it("can deactivate channel", () => {
+  return subscribeChannel().then(result => {
+    return lecturebot.slashCommands["/lecturebot-deactivate"]({
       channel: "G00000000",
       user: "U00000000"
     }).then(response => {
-      console.log(response);
-      expect(response).toContain("activated");
+      expect(response).toContain("Lecturebot disabled");
     });
   });
 });
+it("can check non-subscribed channel", () => {
+  return lecturebot.slashCommands["/lecturebot-check"]({
+    channel: "G00000000",
+    user: "U00000000"
+  }).then(response => {
+    expect(response).toContain("NOT ENABLED");
+  });
+});
+it("can check subscribed channel", () => {
+  return subscribeChannel().then(() => {
+    return lecturebot.slashCommands["/lecturebot-check"]({
+      channel: "G00000000",
+      user: "U00000000"
+    }).then(response => {
+      expect(response).toContain("is ENABLED");
+    });
+  });
+});
+// });
 
 const commandPayloads = {
   activate: {

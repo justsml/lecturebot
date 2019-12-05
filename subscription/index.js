@@ -11,9 +11,9 @@ const getSubscriptions = () => {
 const removeSubscription = ({ user, channel }) => {
   log("Running removeSubscription:", { user, channel });
   return Subscription.findOne({ user, channel }).then(subscription => {
-    if (subscription) return `Subscription does not exist! Nothing removed.`;
+    if (!subscription) return `Subscription does not exist! Nothing removed.`;
     return Subscription.deleteMany({ user, channel }).then(
-      () => `Removed subscription for ${channel}`
+      () => `Lecturebot disabled for this channel!`
     );
   });
 };
